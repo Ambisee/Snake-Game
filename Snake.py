@@ -3,6 +3,7 @@ from win32api import GetSystemMetrics
 from Modules_Configs.functions import *
 from Modules_Configs.gameObjects import *
 from Modules_Configs.config import *
+from Modules_Configs.scoreObjects import *
 from random import choice
 import pygame
 import time
@@ -21,8 +22,8 @@ def main():
     font = pygame.font.Font(os.path.abspath("Resources/SourceCodePro-Medium.ttf"), 32)
 
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
-    pygame.display.set_caption("Snake")
-    scoreB = Scoreboard(font)
+    pygame.display.set_caption("Snake Game")
+    sBoard = Scoreboard(font)
     player = Snake(20, 20)
     food = Food(player)
 
@@ -37,18 +38,23 @@ def main():
 
         if food.isEaten():
             player.addBody()
-            scoreB.updateScore()
+            sBoard.updateScore()
             food.newLocation()
 
         if player.checkCollision():
             start = False
             resetGame(player, food)
             while pause < FPS:
-                drawEnd(screen, font, scoreB.score)
+                drawEnd(screen, font, sBoard.score)
                 pygame.display.update()
                 pause += 1
                 time.sleep(0.1)
-            scoreB.reset()
+
+            # ---
+            # Insert code to upload score and name
+            # ---
+
+            sBoard.reset()
             pause = 0
             continue
 
@@ -56,10 +62,10 @@ def main():
         
         if player.start != False:
             player.move()
-        
+
         food.draw(screen)
         player.draw(screen)
-        scoreB.draw(screen)
+        sBoard.draw(screen)
 
         pygame.display.update()
 
