@@ -4,7 +4,6 @@ from Modules_Configs.functions import *
 from Modules_Configs.gameObjects import *
 from Modules_Configs.config import *
 from Modules_Configs.scoreObjects import *
-from random import choice
 import pygame
 import time
 import sys
@@ -24,6 +23,7 @@ def main():
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Snake Game")
     sBoard = Scoreboard(font)
+    sButton = ScoreButton()
     player = Snake(20, 20)
     food = Food(player)
 
@@ -52,6 +52,8 @@ def main():
 
             # ---
             # Insert code to upload score and name
+            tempScore = sBoard.score
+            ScoreSaver(tempScore)
             # ---
 
             sBoard.reset()
@@ -62,10 +64,14 @@ def main():
         
         if player.start != False:
             player.move()
+        else:
+            sButton.checkClick()
+
 
         food.draw(screen)
         player.draw(screen)
         sBoard.draw(screen)
+        sButton.draw(screen)
 
         pygame.display.update()
 

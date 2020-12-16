@@ -1,9 +1,9 @@
 # --- Modules --- #
 import pygame
 
-try:
-    import config
-except:
+if __name__ == "__main__":
+    from config import *
+else:
     from Modules_Configs import config
 
 # --- Functions --- #

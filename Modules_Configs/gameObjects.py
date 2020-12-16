@@ -2,11 +2,10 @@
 from random import choice
 import pygame
 
-try:
+if __name__ == '__main__':
     from config import *
-except:
+else:
     from Modules_Configs.config import *
-
 # --- Classes --- #
 class Cube:
     def __init__(self, row, col):
@@ -35,7 +34,7 @@ class Snake:
         self.start = False
         self.image = headImgRight
 
-        self.x_vel = 0
+        self.x_vel = 1
         self.y_vel = 0
 
     def moveHead(self): # Not for main function
@@ -44,6 +43,15 @@ class Snake:
 
         self.head.col += self.x_vel
         self.head.row += self.y_vel
+
+        if self.head.col < 0:
+            self.head.col = RC - 1
+        elif self.head.col >= RC:
+            self.head.col = 0
+        if self.head.row < 0:
+            self.head.row = RC - 1
+        elif self.head.row >= RC:
+            self.head.row = 0
 
     def checkKey(self):
         keys = pygame.key.get_pressed()
@@ -103,7 +111,7 @@ class Snake:
         self.start = False
         self.image = headImgRight
 
-        self.x_vel = 0
+        self.x_vel = 1
         self.y_vel = 0
 
     def draw(self, window):
