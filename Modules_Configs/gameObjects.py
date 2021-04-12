@@ -147,7 +147,7 @@ class Scoreboard:
 class Food:
     def __init__(self, snake):
         self.snake = snake
-        self.cubes = self.updateGrid()
+        self.cubes = None
         self.row = None
         self.col = None
         self.newLocation()

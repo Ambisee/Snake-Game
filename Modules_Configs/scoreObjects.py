@@ -17,7 +17,7 @@ class ScoreWindow(Tk):
         super().__init__()
         self.title('Snake Game - Scoreboard')
         self.resizable(height=False, width=False)
-        self.protocol("WM_WINDOW_DELETE", self.quit)
+        self.protocol("WM_WINDOW_DELETE", self.destroy)
 
         self.topFrame = Frame(self)
         self.middleFrame = Frame(self)
@@ -41,6 +41,8 @@ class ScoreWindow(Tk):
         self.focus_force()
         self.geometry(f"+{self.winfo_screenwidth() // 2 - self.winfo_reqwidth() // 2}+{self.winfo_screenheight() // 2 - self.winfo_reqheight() // 2}")
 
+        self.printScore()
+
     def printScore(self):
         with open("Resources/Scores.txt", 'r') as f:
             lines = f.readlines()
@@ -49,32 +51,39 @@ class ScoreWindow(Tk):
                 inputVals = line.split(',')
                 self.sList.insert('', 'end', len(self.sList.get_children()), values=tuple(inputVals))
 
+    def nothingness(self):
+        pass
+
     def deleteScore(self):
         if not self.sList.selection():
             return
-        
-        deleteValues = self.sList.item(self.sList.selection())['values']
-        
-        if not messagebox.askyesno("Confirmation", "Are you sure you want to delete this score ?"):
-            return
 
-        with open("Resources/Scores.txt", 'r') as f:
-            lines = f.readlines()
-     
-        with open("Resources/Scores.txt", 'w') as f:
-            for line in lines:
-                line = line.replace('\n', '')
-                value = line.split(',')
-                value[1] = int(value[1])
-                if value != deleteValues:
-                    f.write(f'{value[0]},{str(value[1])}\n')
+        self.bind("<FocusOut>", lambda e: self.nothingness)
+        deleteValues = self.sList.item(self.sList.selection())['values']
+        confirmation = messagebox.askokcancel("Confirmation", "Are you sure you want to delete this score ?")
+        if confirmation == True:
+            with open("Resources/Scores.txt", 'r') as f:
+                lines = f.readlines()
         
-        self.sList.delete(*self.sList.get_children())
-        self.printScore()
+            with open("Resources/Scores.txt", 'w') as f:
+                for line in lines:
+                    line = line.replace('\n', '')
+                    value = line.split(',')
+                    value[1] = int(value[1])
+                    if value != deleteValues:
+                        f.write(f'{value[0]},{str(value[1])}\n')
+            
+            self.sList.delete(*self.sList.get_children())
+            self.printScore()
+            self.bind("<FocusOut>", self.focusOutDestroy)
     
     def focusOutDestroy(self, event):
         super().destroy()
         del self
+
+    def printValues(self):
+        print(self.sList.item(self.sList.selection()))
+        print(self.sList.get_children())
 
 class ScoreList(ttk.Treeview):
     def __init__(self, master):
